@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DatumExtract - Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/styles.css"/>
+  <script defer src="./static/js/script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <a href="/" class="logo-link" aria-label="DatumExtract Home">
+      <svg class="logo" viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg"><path d="M0 20V0H8V4H4V8H8V12H4V16H8V20H0Z" fill="currentColor"/><path d="M12 20V0H20V4H16V16H20V20H12Z" fill="currentColor"/><path d="M24 20V0H32V4H28V16H32V20H24Z" fill="currentColor"/><path d="M36 20V0H44V4H40V16H44V20H36Z" fill="currentColor"/><path d="M48 20V0H56V4H52V16H56V20H48Z" fill="currentColor"/><path d="M60 16L64 8L68 16H60Z M60 20V18H68V20H60Z M64 0L72 20H69L64 10L59 20H56L64 0Z" fill="currentColor"/><rect x="76" y="0" width="4" height="20" fill="currentColor"/><rect x="84" y="0" width="4" height="20" fill="currentColor"/><rect x="92" y="0" width="4" height="20" fill="currentColor"/></svg>
+      <span>DatumExtract</span>
+    </a>
+    <div class="header-center">
+      <div class="model-select-wrapper">
+        <i class="fa-solid fa-brain"></i>
+        <span class="model-label">Model</span>
+        <select id="modelSelect" aria-label="Model">
+          <option value="gpt-4.1" selected>gpt-4.1</option>
+          <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+          <option value="gpt-4.1-nano">gpt-4.1-nano</option>
+          <option value="gpt-4o">gpt-4o</option>
+          <option value="gpt-4o-mini">gpt-4o-mini</option>
+        </select>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="user-greeting">Hello, <strong id="userName">User</strong></span>
+      <button id="logoutBtn" class="btn-icon" title="Logout"><i class="fas fa-right-from-bracket"></i></button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="uploadSection" class="page-section">
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-content">
+          <i class="fa-solid fa-file-arrow-up upload-icon"></i>
+          <h3>Drag & Drop Your Document Here</h3>
+          <p>or <span class="browse-link">click to browse</span>. Supports PDF, PNG, JPG, ZIP.</p>
+        </div>
+        <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.zip" hidden/>
+      </div>
+      <div id="preSubmitPreview" style="display:none;">
+        <div class="preview-card" id="previewCard">
+          </div>
+        <div class="preview-actions">
+          <button id="submitBtn" class="btn btn-primary">Extract Data</button>
+          <button id="cancelBtn" class="btn">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="processingSection" class="page-section" style="display:none;">
+      <div class="processing-card">
+        <h3>Processing Document...</h3>
+        <p>This may take a moment. Please wait.</p>
+        <div class="progress-bar">
+          <div class="progress-bar-inner" id="stepBar"></div>
+        </div>
+        <ol class="step-list">
+          <li id="stepUpload"><i class="fas fa-check-circle"></i><span>Uploading File</span></li>
+          <li id="stepExtract"><i class="fas fa-check-circle"></i><span>Extracting Content</span></li>
+          <li id="stepMap"><i class="fas fa-check-circle"></i><span>Mapping Data</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="zipContentsSection" class="page-section" style="display:none;">
+        <div class="table-header">
+            <h2>ZIP Contents <span class="count-badge" id="zipCount">0</span></h2>
+            <div class="filters">
+                <input id="filterInvoice" type="text" placeholder="Search invoice #" class="filter-input" />
+                <select id="filterType" class="filter-select">
+                    <option value="all">All Types</option><option value="pdf">PDF</option><option value="image">Image</option>
+                </select>
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="data-table">
+                <thead><tr><th>File Name</th><th>Type</th><th>Invoice #</th><th>Action</th></tr></thead>
+                <tbody id="zipTableBody"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="resultsSection" class="page-section" style="display:none;">
+      <div class="results-header">
+        <h2>Extraction Results for <span id="currentFileBadge"></span></h2>
+        <div class="action-buttons">
+          <button class="btn" id="downloadSelectedBtn"><i class="fas fa-check-double"></i><span>Selected JSON</span></button>
+          <button class="btn" id="downloadAllBtn"><i class="fas fa-download"></i><span>All JSON</span></button>
+          <button class="btn" id="backToZipBtn" style="display:none;"><i class="fas fa-arrow-left"></i><span>Back to ZIP</span></button>
+          <button class="btn btn-primary" id="newAnalysisBtn"><i class="fas fa-plus"></i><span>New Analysis</span></button>
+        </div>
+      </div>
+      <div class="results-grid">
+        <div class="data-panel">
+          <div class="table-container">
+            <table class="data-table">
+              <thead><tr><th><i class="fa-regular fa-eye"></i></th><th>Field</th><th>Value</th></tr></thead>
+              <tbody id="dataTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="viewer-panel">
+          <div class="viewer-container" id="documentContainer">
+            <canvas id="documentCanvas"></canvas>
+            <div class="viewer-controls">
+              <div id="signatureBadge"></div>
+              <div class="zoom-controls">
+                <button class="btn-icon" id="zoomOut" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+                <span id="zoomLevel">100%</span>
+                <button class="btn-icon" id="zoomIn" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <div class="toast" id="successToast"><i class="fas fa-check-circle"></i><span>Success</span></div>
+  <div class="toast error" id="errorToast"><i class="fas fa-exclamation-circle"></i><span id="errorMessage">Error</span></div>
+</body>
+</html>

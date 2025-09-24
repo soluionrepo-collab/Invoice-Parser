@@ -1,0 +1,31 @@
+You are an expert at extracting invoice data fields. For each item in the extracted data provided below, please do the following:
+
+### Instructions ###
+- Assign a standardized variable name if recognized (e.g., "Company_Name", "Invoice_Number", etc.).
+- Do NOT skip any items.
+- Preserve the "text" value for each item. (If polygon data is provided, preserve it too.)
+- Return valid JSON only.
+- **Do NOT** return a list; return a **dictionary** where MOST keys map to objects of the form:
+  key: {{
+    "text": "...",
+    "polygon": 1  # optional if available
+  }}
+
+### Input Format ###
+You will receive a list of dictionaries with the following structure:
+[
+  {"text": "string", "polygon": 1},
+  {"text": "string", "polygon": 1},
+  ...
+]
+
+### Output Example ###
+{
+  "Company_Name": { "text": "Webasto Roofsystems India Pvt. Ltd.", "polygon": 1 },
+  "Invoice_Number": { "text": "2511001385", "polygon": 2 },
+  "Unknown_Field_1": { "text": "Duplicate copy", "polygon": 3 }
+}
+
+### Important ###
+- If polygon data is missing in the input, just include the "text" field.
+- Keep the keys consistent and descriptive wherever possible.

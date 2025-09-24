@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DatumExtract - Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="D:\Agentic Demos\Invoice Parser\Frontend\static\css\login.css" />
+  <script defer src="D:\Agentic Demos\Invoice Parser\Frontend\static\js\login.js"></script>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="brand-header">
+        <svg class="logo" viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 20V0H8V4H4V8H8V12H4V16H8V20H0Z" fill="currentColor"/>
+          <path d="M12 20V0H20V4H16V16H20V20H12Z" fill="currentColor"/>
+          <path d="M24 20V0H32V4H28V16H32V20H24Z" fill="currentColor"/>
+          <path d="M36 20V0H44V4H40V16H44V20H36Z" fill="currentColor"/>
+          <path d="M48 20V0H56V4H52V16H56V20H48Z" fill="currentColor"/>
+          <path d="M60 16L64 8L68 16H60Z M60 20V18H68V20H60Z M64 0L72 20H69L64 10L59 20H56L64 0Z" fill="currentColor"/>
+          <rect x="76" y="0" width="4" height="20" fill="currentColor"/>
+          <rect x="84" y="0" width="4" height="20" fill="currentColor"/>
+          <rect x="92" y="0" width="4" height="20" fill="currentColor"/>
+        </svg>
+        <h1>DatumExtract</h1>
+      </div>
+
+      <div id="signInView">
+        <form id="signInForm" novalidate>
+          <h2>Welcome Back</h2>
+          <p>Sign in to continue to your dashboard.</p>
+          <div class="input-group">
+            <input type="email" id="signInEmail" name="email" placeholder="Email Address" required />
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+          <div class="input-group">
+            <input type="password" id="signInPassword" name="password" placeholder="Password" required />
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <button type="submit" id="btnSignIn">Sign In</button>
+        </form>
+        <p class="toggle-link">
+          No account? <a href="#" id="showSignUp">Create one here</a>
+        </p>
+      </div>
+
+      <div id="signUpView" style="display: none;">
+        <form id="signUpForm" novalidate>
+          <h2>Create Account</h2>
+          <p>Get started with smart document extraction.</p>
+          <div class="input-group">
+            <input type="text" id="signUpName" name="name" placeholder="Full Name" required />
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="input-group">
+            <input type="email" id="signUpEmail" name="email" placeholder="Email Address" required />
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+          <div class="input-group">
+            <input type="password" id="signUpPassword" name="password" placeholder="Password (min. 8 chars)" required />
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <button type="submit" id="btnSignUp">Sign Up</button>
+        </form>
+        <p class="toggle-link">
+          Already have an account? <a href="#" id="showSignIn">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="toast" id="toast">
+    <div class="toast-content">
+      <i id="toastIcon" class="fas fa-check-circle"></i>
+      <span id="toastMessage">Success!</span>
+    </div>
+  </div>
+
+  <span class="sr-only" id="sr-status" aria-live="polite"></span>
+</body>
+</html>
